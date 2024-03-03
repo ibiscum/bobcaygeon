@@ -13,9 +13,10 @@ import (
 	"github.com/envoyproxy/go-control-plane/envoy/api/v2/route"
 	hcm "github.com/envoyproxy/go-control-plane/envoy/config/filter/network/http_connection_manager/v2"
 	discovery "github.com/envoyproxy/go-control-plane/envoy/service/discovery/v2"
-	"github.com/envoyproxy/go-control-plane/pkg/cache"
-	xds "github.com/envoyproxy/go-control-plane/pkg/server"
-	"github.com/envoyproxy/go-control-plane/pkg/util"
+
+	// "github.com/envoyproxy/go-control-plane/pkg/cache"
+	// xds "github.com/envoyproxy/go-control-plane/pkg/server"
+	// "github.com/envoyproxy/go-control-plane/pkg/util"
 	"github.com/gogo/protobuf/types"
 	"google.golang.org/grpc"
 )
@@ -40,12 +41,12 @@ func (h hash) ID(node *core.Node) string {
 
 // ControlPlane represents an Envoy control plane we use to dynamically add endpoints
 type ControlPlane struct {
-	apiPort       int
-	snapshotCache cache.SnapshotCache
-	cacheVersion  int32
-	cluster       *api.Cluster
-	listener      *api.Listener
-	endpoints     *api.ClusterLoadAssignment
+	apiPort int
+	// snapshotCache cache.SnapshotCache
+	cacheVersion int32
+	cluster      *api.Cluster
+	listener     *api.Listener
+	endpoints    *api.ClusterLoadAssignment
 }
 
 // MgmtEndpoint represents a single endpoint of a bcg-mgmt server that will become proxied by us
@@ -56,7 +57,9 @@ type MgmtEndpoint struct {
 
 // NewControlPlane will instantiate a control plane
 func NewControlPlane(apiPort int) *ControlPlane {
-	cp := &ControlPlane{apiPort: apiPort, snapshotCache: cache.NewSnapshotCache(false, hash{}, nil), cacheVersion: 1}
+	cp := &ControlPlane{apiPort: apiPort,
+		// snapshotCache: cache.NewSnapshotCache(false, hash{}, nil),
+		cacheVersion: 1}
 
 	// build our initial dyanmic configuration
 	// TODO: could probably just use the EDS service,

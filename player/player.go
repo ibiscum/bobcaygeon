@@ -6,7 +6,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hajimehoshi/oto"
+	"github.com/ebitengine/oto/v3"
 	"github.com/ibiscum/bobcaygeon/rtsp"
 )
 
@@ -50,7 +50,6 @@ func (lp *LocalPlayer) SetVolume(volume float64) {
 	lp.volLock.Lock()
 	defer lp.volLock.Unlock()
 	lp.volume = volume
-
 }
 
 // SetTrack sets the track for the player
@@ -79,24 +78,42 @@ func (lp *LocalPlayer) GetTrack() Track {
 }
 
 func (lp *LocalPlayer) playStream(session *rtsp.Session) {
-	p, err := oto.NewPlayer(44100, 2, 2, 10000)
+	op := &oto.NewContextOptions{}
+	op.SampleRate = 44100
+	op.ChannelCount = 2
+	op.BufferSize = 1000
+	op.Format = oto.FormatSignedInt16LE
+	otoCtx, readyChan, err := oto.NewContext(op)
 	if err != nil {
-		log.Println("error initializing player", err)
-		return
+		panic("oto.NewContext failed: " + err.Error())
 	}
+	<-readyChan
+
 	decoder := GetCodec(session)
+	// p, err := oto.NewPlayer(44100, 2, 2, 10000)
+
+	// if err != nil {
+	// 	log.Println("error initializing player", err)
+	// 	return
+	// }
+
 	for d := range session.DataChan {
 		lp.volLock.RLock()
-		vol := lp.volume
+		// vol := lp.volume
 		lp.volLock.RUnlock()
 		decoded, err := decoder(d)
 		if err != nil {
 			log.Println("Problem decoding packet")
 		}
-		p.Write(AdjustAudio(decoded, vol))
+
+		r := bytes.NewReader(decoded)
+
+		p := otoCtx.NewPlayer(r)
+		p.Play()
+		// p.Write(AdjustAudio(decoded, vol))
 	}
 	log.Println("Data stream ended closing player")
-	p.Close()
+	// p.Close()
 }
 
 // AdjustAudio takes a raw data frame of audio and a volume value between 0 and 1, 1 being full volume, 0 being mute

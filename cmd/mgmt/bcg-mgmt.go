@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net"
 	"os"
@@ -94,7 +93,7 @@ func (*memberHandler) NotifyUpdate(node *memberlist.Node) {
 func main() {
 	flag.Parse()
 	log.Println(*configPath)
-	configFile, err := ioutil.ReadFile(*configPath)
+	configFile, err := os.ReadFile(*configPath)
 	// if we os.Open returns an error then handle it
 	if err != nil {
 		log.Fatal("Could not open config file: ", err)
@@ -113,7 +112,7 @@ func main() {
 		if err != nil {
 			log.Fatal("Could not update config")
 		}
-		ioutil.WriteFile(*configPath, updated, 0644)
+		os.WriteFile(*configPath, updated, 0644)
 	}
 
 	nodeName := config.Node.Name
