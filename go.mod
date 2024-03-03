@@ -3,7 +3,6 @@ module github.com/nstehr/bobcaygeon
 go 1.12
 
 require (
-	github.com/cenkalti/backoff v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dustinkirkland/golang-petname v0.0.0-20170921220637-d3c2ba80e75e
 	github.com/envoyproxy/go-control-plane v0.12.0
@@ -12,7 +11,7 @@ require (
 	github.com/golang/protobuf v1.5.3
 	github.com/google/btree v1.0.1 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20171102034023-444abdf92094 // indirect
-	github.com/grandcat/zeroconf v0.0.0-20171029195637-8219919fca89
+	github.com/grandcat/zeroconf v1.0.0
 	github.com/hajimehoshi/oto v0.0.0-20171227160730-ce369678328c
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
