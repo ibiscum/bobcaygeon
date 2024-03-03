@@ -10,10 +10,10 @@ import (
 
 	"github.com/hajimehoshi/oto"
 	"github.com/hashicorp/memberlist"
-	"github.com/nstehr/bobcaygeon/cluster"
-	"github.com/nstehr/bobcaygeon/player"
-	"github.com/nstehr/bobcaygeon/raop"
-	"github.com/nstehr/bobcaygeon/rtsp"
+	"github.com/ibiscum/bobcaygeon/cluster"
+	"github.com/ibiscum/bobcaygeon/player"
+	"github.com/ibiscum/bobcaygeon/raop"
+	"github.com/ibiscum/bobcaygeon/rtsp"
 )
 
 // Player will forward data packets to member nodes
@@ -32,7 +32,7 @@ type Player struct {
 // session for data transfer, as well the port
 // for making RTSP calls for control
 
-//TODO: should this be promoted to the RTSP package and
+// TODO: should this be promoted to the RTSP package and
 // returned by raop.EstablishSession ??
 type clientSession struct {
 	*rtsp.Session

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/nstehr/bobcaygeon/sdp"
+	"github.com/ibiscum/bobcaygeon/sdp"
 
-	"github.com/nstehr/bobcaygeon/player"
-	"github.com/nstehr/bobcaygeon/rtsp"
+	"github.com/ibiscum/bobcaygeon/player"
+	"github.com/ibiscum/bobcaygeon/rtsp"
 )
 
 type FakePlayer struct {

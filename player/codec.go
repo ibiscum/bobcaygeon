@@ -3,8 +3,8 @@ package player
 import (
 	"strings"
 
+	"github.com/ibiscum/bobcaygeon/rtsp"
 	"github.com/maghul/alac"
-	"github.com/nstehr/bobcaygeon/rtsp"
 )
 
 // CodecHandler handler function for receiving raw bytes and decoding them using some codec

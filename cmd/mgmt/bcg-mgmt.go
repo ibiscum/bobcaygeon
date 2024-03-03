@@ -11,12 +11,12 @@ import (
 	"syscall"
 
 	"github.com/grandcat/zeroconf"
-	"github.com/nstehr/bobcaygeon/cmd/mgmt/raft"
+	"github.com/ibiscum/bobcaygeon/cmd/mgmt/raft"
 
 	petname "github.com/dustinkirkland/golang-petname"
 	"github.com/hashicorp/memberlist"
-	"github.com/nstehr/bobcaygeon/cluster"
-	"github.com/nstehr/bobcaygeon/cmd/mgmt/api"
+	"github.com/ibiscum/bobcaygeon/cluster"
+	"github.com/ibiscum/bobcaygeon/cmd/mgmt/api"
 	toml "github.com/pelletier/go-toml"
 	"google.golang.org/grpc"
 )

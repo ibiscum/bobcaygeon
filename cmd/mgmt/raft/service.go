@@ -10,11 +10,11 @@ import (
 	"time"
 
 	"github.com/hashicorp/memberlist"
-	speakerAPI "github.com/nstehr/bobcaygeon/api"
-	"github.com/nstehr/bobcaygeon/cluster"
-	"github.com/nstehr/bobcaygeon/cmd/mgmt/api"
-	"github.com/nstehr/bobcaygeon/cmd/mgmt/service"
-	"github.com/nstehr/bobcaygeon/rtsp"
+	speakerAPI "github.com/ibiscum/bobcaygeon/api"
+	"github.com/ibiscum/bobcaygeon/cluster"
+	"github.com/ibiscum/bobcaygeon/cmd/mgmt/api"
+	"github.com/ibiscum/bobcaygeon/cmd/mgmt/service"
+	"github.com/ibiscum/bobcaygeon/rtsp"
 	"google.golang.org/grpc"
 )
 

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nstehr/bobcaygeon/rtsp"
-	"github.com/nstehr/bobcaygeon/sdp"
+	"github.com/ibiscum/bobcaygeon/rtsp"
+	"github.com/ibiscum/bobcaygeon/sdp"
 )
 
 // statemachine that will handle the handshaking to set up the session with the

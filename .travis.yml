@@ -25,7 +25,7 @@ deploy:
   file_glob: true
   file: "bcg-*"
   on:
-    repo: nstehr/bobcaygeon
+    repo: ibiscum/bobcaygeon
     tags: true # The deployment happens only if the commit has a tag.
 - provider: gcs
   skip_cleanup: true
@@ -35,6 +35,6 @@ deploy:
   bucket: bcg_artifacts
   local-dir: artifacts
   on:
-    repo: nstehr/bobcaygeon
+    repo: ibiscum/bobcaygeon
     all_branches: true
     tags: false

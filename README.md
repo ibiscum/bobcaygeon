@@ -1,8 +1,8 @@
 # Bobcaygeon
 
-[![Build Status](https://travis-ci.org/nstehr/bobcaygeon.svg?branch=master)](https://travis-ci.org/nstehr/bobcaygeon) [![Coverage Status](https://coveralls.io/repos/github/nstehr/bobcaygeon/badge.svg?branch=master)](https://coveralls.io/github/nstehr/bobcaygeon?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/nstehr/bobcaygeon)](https://goreportcard.com/report/github.com/nstehr/bobcaygeon)
+[![Build Status](https://travis-ci.org/ibiscum/bobcaygeon.svg?branch=master)](https://travis-ci.org/ibiscum/bobcaygeon) [![Coverage Status](https://coveralls.io/repos/github/ibiscum/bobcaygeon/badge.svg?branch=master)](https://coveralls.io/github/ibiscum/bobcaygeon?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/ibiscum/bobcaygeon)](https://goreportcard.com/report/github.com/ibiscum/bobcaygeon)
 
-![gord downie](https://github.com/nstehr/bobcaygeon/blob/master/downie1a.jpg)
+![gord downie](https://github.com/ibiscum/bobcaygeon/blob/master/downie1a.jpg)
 
 Multi room speaker application.
 
@@ -65,8 +65,8 @@ a `bcg` application in the cluster will act as the leader, and every subsequent 
 
 ## API
 There are two layers of API to interact with, if you would like.  Both are built on grpc.
-1. Each instance of `bcg` has a basic GRPC API: https://github.com/nstehr/bobcaygeon/blob/master/api/bobcaygeon.proto
-2. `bcg-mgmt` has a richer management GRPC API: https://github.com/nstehr/bobcaygeon/blob/master/cmd/mgmt/api/management.proto
+1. Each instance of `bcg` has a basic GRPC API: https://github.com/ibiscum/bobcaygeon/blob/master/api/bobcaygeon.proto
+2. `bcg-mgmt` has a richer management GRPC API: https://github.com/ibiscum/bobcaygeon/blob/master/cmd/mgmt/api/management.proto
 
 ## Raspberry Pi Notes
 You can grab the `bcg-arm` build and drop it on your raspberry pi.  You'll need to make sure you

@@ -16,9 +16,9 @@ import (
 	petname "github.com/dustinkirkland/golang-petname"
 	"github.com/grandcat/zeroconf"
 	"github.com/hashicorp/memberlist"
-	"github.com/nstehr/bobcaygeon/cluster"
-	"github.com/nstehr/bobcaygeon/cmd/frontend/control"
-	_ "github.com/nstehr/bobcaygeon/cmd/frontend/statik"
+	"github.com/ibiscum/bobcaygeon/cluster"
+	"github.com/ibiscum/bobcaygeon/cmd/frontend/control"
+	_ "github.com/ibiscum/bobcaygeon/cmd/frontend/statik"
 	toml "github.com/pelletier/go-toml"
 	"github.com/rakyll/statik/fs"
 )

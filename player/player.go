@@ -7,7 +7,7 @@ import (
 	"sync"
 
 	"github.com/hajimehoshi/oto"
-	"github.com/nstehr/bobcaygeon/rtsp"
+	"github.com/ibiscum/bobcaygeon/rtsp"
 )
 
 // Player defines a player for outputting the data packets from the session

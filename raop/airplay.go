@@ -12,9 +12,9 @@ import (
 	"sync"
 
 	"github.com/grandcat/zeroconf"
-	"github.com/nstehr/bobcaygeon/player"
-	"github.com/nstehr/bobcaygeon/rtsp"
-	"github.com/nstehr/bobcaygeon/sdp"
+	"github.com/ibiscum/bobcaygeon/player"
+	"github.com/ibiscum/bobcaygeon/rtsp"
+	"github.com/ibiscum/bobcaygeon/sdp"
 )
 
 // sets up the properties needed to make us discoverable as a airtunes service
@@ -106,7 +106,7 @@ func NewAirplayServer(port int, name string, player player.Player) *AirplayServe
 	return &as
 }
 
-//Start starts the airplay server, broadcasting on bonjour, ready to accept requests
+// Start starts the airplay server, broadcasting on bonjour, ready to accept requests
 func (a *AirplayServer) Start(verbose bool, advertise bool) {
 
 	if advertise {
@@ -150,7 +150,7 @@ func (a *AirplayServer) ToggleAdvertise(shouldAdvertise bool) {
 	}
 }
 
-//ChangeName will change the name of the broadcast service
+// ChangeName will change the name of the broadcast service
 func (a *AirplayServer) ChangeName(newName string) error {
 	if strings.TrimSpace(newName) == "" {
 		return errors.New("New name must be non-empty")

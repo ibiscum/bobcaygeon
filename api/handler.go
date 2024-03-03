@@ -4,9 +4,9 @@ import (
 	"log"
 
 	"github.com/hashicorp/memberlist"
-	"github.com/nstehr/bobcaygeon/cluster"
-	"github.com/nstehr/bobcaygeon/player/forwarding"
-	"github.com/nstehr/bobcaygeon/raop"
+	"github.com/ibiscum/bobcaygeon/cluster"
+	"github.com/ibiscum/bobcaygeon/player/forwarding"
+	"github.com/ibiscum/bobcaygeon/raop"
 	"golang.org/x/net/context"
 )
 
