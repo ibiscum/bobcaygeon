@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -25,7 +26,7 @@ func readRequest(r io.Reader) (*Request, error) {
 	requestLineParts := strings.Split(requestLine, " ")
 
 	if len(requestLineParts) != 3 {
-		return nil, fmt.Errorf("Improperly formatted request line: %s", requestLine)
+		return nil, fmt.Errorf("improperly formatted request line: %s", requestLine)
 	}
 
 	method, err := getMethod(requestLineParts[0])
@@ -52,7 +53,7 @@ func readRequest(r io.Reader) (*Request, error) {
 		}
 		headerParts := strings.Split(headerField, ":")
 		if len(headerParts) < 2 {
-			return nil, fmt.Errorf("Inproper header: %s", headerField)
+			return nil, fmt.Errorf("improper header: %s", headerField)
 		}
 		headers[strings.TrimSpace(headerParts[0])] = strings.TrimSpace(headerParts[1])
 	}
@@ -68,7 +69,10 @@ func readRequest(r io.Reader) (*Request, error) {
 	length, _ := strconv.Atoi(contentLength)
 	bodyBuf := make([]byte, length)
 	// makes sure we read the full length of the content
-	io.ReadFull(buf, bodyBuf)
+	_, err = io.ReadFull(buf, bodyBuf)
+	if err != nil {
+		log.Fatal(err)
+	}
 	req.Body = bodyBuf
 
 	return req, nil
@@ -121,18 +125,18 @@ func readResponse(r io.Reader) (*Response, error) {
 	statusLine = strings.Trim(statusLine, "\r\n")
 	statusLineParts := strings.Split(statusLine, " ")
 	if len(statusLineParts) != 3 {
-		return nil, fmt.Errorf("Improperly formatted status line: %s", statusLine)
+		return nil, fmt.Errorf("improperly formatted status line: %s", statusLine)
 	}
 
 	resp.protocol = statusLineParts[0]
 	statusNum, err := strconv.Atoi(statusLineParts[1])
 	if err != nil {
-		return nil, fmt.Errorf("Status not a valid integer: %s", statusLineParts[1])
+		return nil, fmt.Errorf("status not a valid integer: %s", statusLineParts[1])
 	}
 	status, err := getStatus(statusNum)
 
 	if err != nil {
-		return nil, fmt.Errorf("Status does exist in RTSP protocol: %d", statusNum)
+		return nil, fmt.Errorf("status does exist in RTSP protocol: %d", statusNum)
 	}
 	resp.Status = status
 
@@ -150,7 +154,7 @@ func readResponse(r io.Reader) (*Response, error) {
 		}
 		headerParts := strings.Split(headerField, ":")
 		if len(headerParts) < 2 {
-			return nil, fmt.Errorf("Inproper header: %s", headerField)
+			return nil, fmt.Errorf("improper header: %s", headerField)
 		}
 		headers[strings.TrimSpace(headerParts[0])] = strings.TrimSpace(headerParts[1])
 	}
@@ -165,7 +169,10 @@ func readResponse(r io.Reader) (*Response, error) {
 	length, _ := strconv.Atoi(contentLength)
 	bodyBuf := make([]byte, length)
 	// makes sure we read the full length of the content
-	io.ReadFull(buf, bodyBuf)
+	_, err = io.ReadFull(buf, bodyBuf)
+	if err != nil {
+		log.Fatal(err)
+	}
 	resp.Body = bodyBuf
 
 	return resp, nil

@@ -82,7 +82,7 @@ func (Delegate) MergeRemoteState(buf []byte, join bool) {}
 // NotifyMsg is called when a user-data message is received.
 func (Delegate) NotifyMsg([]byte) {}
 
-//NewEventDelegate instantiates a new EventDelegate struct
+// NewEventDelegate instantiates a new EventDelegate struct
 func NewEventDelegate(d []memberlist.EventDelegate) *EventDelegate {
 	return &EventDelegate{eventDelegates: d}
 }
@@ -116,7 +116,10 @@ func (ed *EventDelegate) NotifyUpdate(node *memberlist.Node) {
 func DecodeNodeMeta(nodeMeta []byte) NodeMeta {
 	dec := gob.NewDecoder(bytes.NewReader(nodeMeta))
 	var meta NodeMeta
-	dec.Decode(&meta)
+	err := dec.Decode(&meta)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return meta
 }
 

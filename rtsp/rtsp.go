@@ -71,7 +71,7 @@ var methods = map[string]Method{
 func getMethod(method string) (Method, error) {
 	m, exists := methods[strings.ToLower(method)]
 	if !exists {
-		return -1, fmt.Errorf("Not valid method: %s", method)
+		return -1, fmt.Errorf("not a valid method: %s", method)
 	}
 	return m, nil
 }
@@ -133,7 +133,7 @@ var statuses = map[int]Status{
 func getStatus(status int) (Status, error) {
 	s, exists := statuses[status]
 	if !exists {
-		return -1, fmt.Errorf("Not valid status: %d", status)
+		return -1, fmt.Errorf("not a valid status: %d", status)
 	}
 	return s, nil
 }

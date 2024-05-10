@@ -123,7 +123,10 @@ func (s *Session) StartSending() error {
 	log.Println("Session started.  Will start sending packets")
 	go func() {
 		for pkt := range s.DataChan {
-			conn.Write(pkt)
+			_, err := conn.Write(pkt)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}()
 	return nil

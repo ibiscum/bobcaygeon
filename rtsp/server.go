@@ -98,7 +98,10 @@ func read(conn net.Conn, handlers map[Method]RequestHandler, verbose bool) {
 			log.Println("Outbound Response")
 			log.Println(resp.String())
 		}
-		writeResponse(conn, resp)
+		_, err = writeResponse(conn, resp)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 	}
 }
