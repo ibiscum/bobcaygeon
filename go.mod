@@ -9,7 +9,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/grandcat/zeroconf v1.0.0
 	github.com/hajimehoshi/oto v1.0.1
-	github.com/hashicorp/memberlist v0.5.0
+	github.com/hashicorp/memberlist v0.5.1
 	github.com/hashicorp/raft v1.6.1
 	github.com/hashicorp/raft-boltdb v0.0.0-20231211162105-6c830fa4535e
 	github.com/maghul/alac v0.0.0-20161106215514-129591bceef4
