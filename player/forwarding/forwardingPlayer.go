@@ -8,7 +8,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hajimehoshi/oto"
 	"github.com/hashicorp/memberlist"
 	"github.com/ibiscum/bobcaygeon/cluster"
 	"github.com/ibiscum/bobcaygeon/player"
@@ -18,12 +17,12 @@ import (
 
 // Player will forward data packets to member nodes
 type Player struct {
-	volLock      sync.RWMutex
-	trackLock    sync.RWMutex
-	volume       float64
-	isMuted      bool
-	sessions     *sessionMap
-	ap           *oto.Player
+	volLock   sync.RWMutex
+	trackLock sync.RWMutex
+	volume    float64
+	isMuted   bool
+	sessions  *sessionMap
+	//ap           *oto.Player
 	currentTrack player.Track
 }
 
@@ -44,9 +43,9 @@ type sessionMap struct {
 	sessions map[string]*clientSession
 }
 
-func newSessionMap() *sessionMap {
-	return &sessionMap{sessions: make(map[string]*clientSession)}
-}
+// func newSessionMap() *sessionMap {
+// 	return &sessionMap{sessions: make(map[string]*clientSession)}
+// }
 
 func (sm *sessionMap) addSession(name string, session *clientSession) {
 	sm.Lock()
@@ -66,12 +65,12 @@ func (sm *sessionMap) removeAll() {
 	sm.sessions = make(map[string]*clientSession)
 }
 
-func (sm *sessionMap) sessionExists(name string) bool {
-	sm.RLock()
-	defer sm.RUnlock()
-	_, present := sm.sessions[name]
-	return present
-}
+// func (sm *sessionMap) sessionExists(name string) bool {
+// 	sm.RLock()
+// 	defer sm.RUnlock()
+// 	_, present := sm.sessions[name]
+// 	return present
+// }
 
 func (sm *sessionMap) getSessions() []*clientSession {
 	sm.RLock()
@@ -86,11 +85,14 @@ func (sm *sessionMap) getSessions() []*clientSession {
 
 // NewPlayer instantiates a new Player
 func NewPlayer() (*Player, error) {
-	ap, err := oto.NewPlayer(44100, 2, 2, 10000)
-	if err != nil {
-		return nil, err
-	}
-	return &Player{sessions: newSessionMap(), volume: 1, ap: ap, isMuted: false}, nil
+	// ap, err := oto.NewPlayer(44100, 2, 2, 10000)
+
+	// ap, err := oto.Player(44100, 2, 2, 10000)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// return &Player{sessions: newSessionMap(), volume: 1, ap: ap, isMuted: false}, nil
+	return nil, nil
 }
 
 // NotifyJoin is invoked when a node is detected to have joined.
@@ -193,7 +195,7 @@ func (p *Player) Play(session *rtsp.Session) {
 	go func(dc player.CodecHandler) {
 		for d := range session.DataChan {
 			p.volLock.RLock()
-			vol := p.volume
+			// vol := p.volume
 			isMuted := p.isMuted
 			p.volLock.RUnlock()
 			func() {
@@ -204,11 +206,12 @@ func (p *Player) Play(session *rtsp.Session) {
 				}()
 				// will play the audio, if player isn't muted
 				if !isMuted {
-					decoded, err := dc(d)
-					if err != nil {
-						log.Println("Problem decoding packet")
-					}
-					p.ap.Write(player.AdjustAudio(decoded, vol))
+					log.Println("!isMuted")
+					// decoded, err := dc(d)
+					// if err != nil {
+					// 	log.Println("Problem decoding packet")
+					// }
+					// p.ap.Write(player.AdjustAudio(decoded, vol))
 				}
 				// will forward the audio to other clients
 				go func(pkt []byte) {

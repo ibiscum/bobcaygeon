@@ -12,6 +12,7 @@ import (
 
 // Server represents the gRPC server
 type Server struct {
+	UnimplementedAirPlayManagementServer
 	airplayServer    *raop.AirplayServer
 	forwardingPlayer *forwarding.Player
 	nodes            *memberlist.Memberlist
