@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net"
 	"os"
@@ -47,7 +46,7 @@ type conf struct {
 func main() {
 	flag.Parse()
 	// generate a name for this node and initialize the distributed member list
-	configFile, err := ioutil.ReadFile(*configPath)
+	configFile, err := os.ReadFile(*configPath)
 	// if we os.Open returns an error then handle it
 	if err != nil {
 		log.Fatal("Could not open config file: ", err)
@@ -66,7 +65,10 @@ func main() {
 		if err != nil {
 			log.Fatal("Could not update config")
 		}
-		ioutil.WriteFile(*configPath, updated, 0644)
+		err = os.WriteFile(*configPath, updated, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	nodeName := config.Node.Name
 	log.Printf("Starting node: %s\n", nodeName)
@@ -147,6 +149,7 @@ func main() {
 	case <-sig:
 		// Exit by user
 		log.Println("Ctrl-c detected, shutting down")
+	default:
 	}
 
 	log.Println("Goodbye.")

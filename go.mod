@@ -8,6 +8,9 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.5.4
 	github.com/grandcat/zeroconf v1.0.0
+	github.com/hashicorp/memberlist v0.5.1
+	github.com/hashicorp/raft v1.6.1
+	github.com/hashicorp/raft-boltdb v0.0.0-20231211162105-6c830fa4535e
 	github.com/maghul/alac v0.0.0-20161106215514-129591bceef4
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rakyll/statik v0.1.7
@@ -16,6 +19,8 @@ require (
 )
 
 require (
+	cel.dev/expr v0.15.0 // indirect
+	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.4.1 // indirect
 	github.com/cncf/xds/go v0.0.0-20240423153145-555b57ec207b // indirect
 	github.com/ebitengine/purego v0.7.1 // indirect
@@ -25,7 +30,6 @@ require (
 )
 
 require (
-	github.com/hashicorp/go-metrics v0.4.1 // indirect
 	github.com/boltdb/bolt v1.3.1 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect

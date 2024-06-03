@@ -366,7 +366,10 @@ func (a *AirplayServer) closeSession(remoteAddress string) {
 	if as != nil {
 		// stops the client from sending data
 		if as.client != nil {
-			as.client.Stop()
+			err := as.client.Stop()
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 		// closes the actual listening socket
 		as.session.Close(doneChan)
@@ -389,7 +392,7 @@ func getMacAddr() (addr net.HardwareAddr) {
 	interfaces, err := net.Interfaces()
 	if err == nil {
 		for _, i := range interfaces {
-			if i.Flags&net.FlagUp != 0 && bytes.Compare(i.HardwareAddr, nil) != 0 {
+			if i.Flags&net.FlagUp != 0 && !bytes.Equal(i.HardwareAddr, nil) {
 				// Don't use random as we have a real address
 				addr = i.HardwareAddr
 				break

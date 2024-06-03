@@ -14,8 +14,9 @@ import (
 	hcm "github.com/envoyproxy/go-control-plane/envoy/config/filter/network/http_connection_manager/v2"
 	discovery "github.com/envoyproxy/go-control-plane/envoy/service/discovery/v2"
 
-	// "github.com/envoyproxy/go-control-plane/pkg/cache"
-	// xds "github.com/envoyproxy/go-control-plane/pkg/server"
+	"github.com/envoyproxy/go-control-plane/pkg/cache/v3"
+	xds "github.com/envoyproxy/go-control-plane/pkg/server/v3"
+
 	// "github.com/envoyproxy/go-control-plane/pkg/util"
 	"github.com/gogo/protobuf/types"
 	"google.golang.org/grpc"
@@ -41,12 +42,12 @@ func (h hash) ID(node *core.Node) string {
 
 // ControlPlane represents an Envoy control plane we use to dynamically add endpoints
 type ControlPlane struct {
-	apiPort int
-	// snapshotCache cache.SnapshotCache
-	cacheVersion int32
-	cluster      *api.Cluster
-	listener     *api.Listener
-	endpoints    *api.ClusterLoadAssignment
+	apiPort       int
+	snapshotCache cache.SnapshotCache
+	cacheVersion  int32
+	cluster       *api.Cluster
+	listener      *api.Listener
+	endpoints     *api.ClusterLoadAssignment
 }
 
 // MgmtEndpoint represents a single endpoint of a bcg-mgmt server that will become proxied by us
@@ -127,7 +128,10 @@ func (cp *ControlPlane) RemoveEndpoint(mgmtEndpoint MgmtEndpoint) {
 }
 
 func (cp *ControlPlane) newSnapshot() {
-	snapshot := cache.NewSnapshot(fmt.Sprint(cp.cacheVersion), []cache.Resource{cp.endpoints}, []cache.Resource{cp.cluster}, nil, []cache.Resource{cp.listener})
+	snapshot, err := cache.NewSnapshot(fmt.Sprint(cp.cacheVersion), []cache.Resource{cp.endpoints}, []cache.Resource{cp.cluster}, nil, []cache.Resource{cp.listener})
+	if err != nil {
+		log.Fatal(err)
+	}
 	_ = cp.snapshotCache.SetSnapshot(envoyNodeName, snapshot)
 	cp.cacheVersion = cp.cacheVersion + 1
 }
@@ -170,7 +174,7 @@ func buildListener() *api.Listener {
 	l.Name = listenerName
 
 	// address of our proxy that callers will access
-	l.Address = core.Address{
+	l.Address = &core.Address{
 		Address: &core.Address_SocketAddress{
 			SocketAddress: &core.SocketAddress{
 				Protocol: core.TCP,
@@ -183,7 +187,7 @@ func buildListener() *api.Listener {
 	}
 
 	r := route.Route{}
-	r.Match = route.RouteMatch{
+	r.Match = &route.RouteMatch{
 		PathSpecifier: &route.RouteMatch_Prefix{
 			Prefix: "/",
 		},
@@ -213,7 +217,7 @@ func buildListener() *api.Listener {
 	v := route.VirtualHost{}
 	v.Name = "local_service"
 	v.Domains = []string{"*"}
-	v.Routes = []route.Route{r}
+	v.Routes = []*route.Route{&r}
 	v.Cors = cors
 
 	// the filters are the interesting part here
@@ -224,7 +228,7 @@ func buildListener() *api.Listener {
 		RouteSpecifier: &hcm.HttpConnectionManager_RouteConfig{
 			RouteConfig: &api.RouteConfiguration{
 				Name:         "local_route",
-				VirtualHosts: []route.VirtualHost{v},
+				VirtualHosts: []*route.VirtualHost{&v},
 			},
 		},
 		HttpFilters: []*hcm.HttpFilter{{
@@ -244,8 +248,8 @@ func buildListener() *api.Listener {
 		log.Println("error: ", err)
 	}
 
-	l.FilterChains = []listener.FilterChain{{
-		Filters: []listener.Filter{{
+	l.FilterChains = []*listener.FilterChain{{
+		Filters: []*listener.Filter{{
 			Name: util.HTTPConnectionManager,
 			ConfigType: &listener.Filter_Config{
 				Config: pbst,
@@ -267,7 +271,7 @@ func buildEndpoints(mgmtEndpoints []MgmtEndpoint) *api.ClusterLoadAssignment {
 
 	la := &api.ClusterLoadAssignment{
 		ClusterName: clusterName,
-		Endpoints: []endpoint.LocalityLbEndpoints{{
+		Endpoints: []*endpoint.LocalityLbEndpoints{{
 			LbEndpoints: endpoints,
 		}},
 	}

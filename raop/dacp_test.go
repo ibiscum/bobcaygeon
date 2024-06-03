@@ -3,7 +3,8 @@ package raop
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
+	"log"
 	"net/http"
 	"testing"
 )
@@ -18,7 +19,7 @@ func (f RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
 	return f(req), nil
 }
 
-//NewTestClient returns *http.Client with Transport replaced to avoid making real calls
+// NewTestClient returns *http.Client with Transport replaced to avoid making real calls
 func NewTestClient(fn RoundTripFunc) *http.Client {
 	return &http.Client{
 		Transport: RoundTripFunc(fn),
@@ -36,19 +37,22 @@ func TestPlay(t *testing.T) {
 		return &http.Response{
 			StatusCode: 200,
 			// Send response to be tested
-			Body: ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			Body: io.NopCloser(bytes.NewBufferString(`OK`)),
 			// Must be set to non-nil value or it panics
 			Header: make(http.Header),
 		}
 	})
-	dc.Play()
+	err := dc.Play()
+	if err != nil {
+		log.Fatal(err)
+	}
 	expectedURL := "http://1.1.1.1:333/ctrl-int/1/play"
 	expectedRemote := "testActiveRemote"
 	if url != expectedURL {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedURL, url))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedURL, url))
 	}
 	if header != expectedRemote {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedRemote, header))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedRemote, header))
 	}
 }
 
@@ -63,19 +67,22 @@ func TestPause(t *testing.T) {
 		return &http.Response{
 			StatusCode: 200,
 			// Send response to be tested
-			Body: ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			Body: io.NopCloser(bytes.NewBufferString(`OK`)),
 			// Must be set to non-nil value or it panics
 			Header: make(http.Header),
 		}
 	})
-	dc.Pause()
+	err := dc.Pause()
+	if err != nil {
+		log.Fatal(err)
+	}
 	expectedURL := "http://1.1.1.1:333/ctrl-int/1/pause"
 	expectedRemote := "testActiveRemote"
 	if url != expectedURL {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedURL, url))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedURL, url))
 	}
 	if header != expectedRemote {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedRemote, header))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedRemote, header))
 	}
 }
 
@@ -90,19 +97,22 @@ func TestPlayPause(t *testing.T) {
 		return &http.Response{
 			StatusCode: 200,
 			// Send response to be tested
-			Body: ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			Body: io.NopCloser(bytes.NewBufferString(`OK`)),
 			// Must be set to non-nil value or it panics
 			Header: make(http.Header),
 		}
 	})
-	dc.PlayPause()
+	err := dc.PlayPause()
+	if err != nil {
+		log.Fatal(err)
+	}
 	expectedURL := "http://1.1.1.1:333/ctrl-int/1/playpause"
 	expectedRemote := "testActiveRemote"
 	if url != expectedURL {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedURL, url))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedURL, url))
 	}
 	if header != expectedRemote {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedRemote, header))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedRemote, header))
 	}
 }
 
@@ -117,19 +127,22 @@ func TestStop(t *testing.T) {
 		return &http.Response{
 			StatusCode: 200,
 			// Send response to be tested
-			Body: ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			Body: io.NopCloser(bytes.NewBufferString(`OK`)),
 			// Must be set to non-nil value or it panics
 			Header: make(http.Header),
 		}
 	})
-	dc.Stop()
+	err := dc.Stop()
+	if err != nil {
+		log.Fatal(err)
+	}
 	expectedURL := "http://1.1.1.1:333/ctrl-int/1/stop"
 	expectedRemote := "testActiveRemote"
 	if url != expectedURL {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedURL, url))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedURL, url))
 	}
 	if header != expectedRemote {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedRemote, header))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedRemote, header))
 	}
 }
 
@@ -144,18 +157,21 @@ func TestNext(t *testing.T) {
 		return &http.Response{
 			StatusCode: 200,
 			// Send response to be tested
-			Body: ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			Body: io.NopCloser(bytes.NewBufferString(`OK`)),
 			// Must be set to non-nil value or it panics
 			Header: make(http.Header),
 		}
 	})
-	dc.Next()
+	err := dc.Next()
+	if err != nil {
+		log.Fatal(err)
+	}
 	expectedURL := "http://1.1.1.1:333/ctrl-int/1/nextitem"
 	expectedRemote := "testActiveRemote"
 	if url != expectedURL {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedURL, url))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedURL, url))
 	}
 	if header != expectedRemote {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Received: %s\r\n", expectedRemote, header))
+		t.Errorf(fmt.Sprintf("Expected: %s, Received: %s", expectedRemote, header))
 	}
 }

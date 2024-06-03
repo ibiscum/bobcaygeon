@@ -11,7 +11,7 @@ func TestResponseGenerate(t *testing.T) {
 	mac, _ := net.ParseMAC("54:52:00:b8:58:77")
 	resp, _ := generateChallengeResponse("gY3cmhtK9LnECNUlXFb0qg==", mac, "192.168.0.15")
 	if resp != expectedResp {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Got: %s", expectedResp, resp))
+		t.Errorf(fmt.Sprintf("Expected: %s\r\n Got: %s", expectedResp, resp))
 	}
 }
 
@@ -20,6 +20,6 @@ func TestResponseGenerateIPv6(t *testing.T) {
 	mac, _ := net.ParseMAC("04:0c:ce:df:c6:d8")
 	resp, _ := generateChallengeResponse("4nQ5iywx/G99yNw9f6oPPg==", mac, "fe80::60c:ceff:fedf:c6d8")
 	if resp != expectedResp {
-		t.Error(fmt.Sprintf("Expected: %s\r\n Got: %s", expectedResp, resp))
+		t.Errorf(fmt.Sprintf("Expected: %s\r\n Got: %s", expectedResp, resp))
 	}
 }

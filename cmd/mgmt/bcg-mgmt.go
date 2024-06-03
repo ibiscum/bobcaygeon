@@ -71,10 +71,10 @@ func (m *memberHandler) NotifyJoin(node *memberlist.Node) {
 // NotifyLeave is invoked when a node is detected to have left.
 // The Node argument must not be modified.
 func (m *memberHandler) NotifyLeave(node *memberlist.Node) {
-	log.Println("Node Left" + node.Name)
+	log.Println("NotifyLeave: Node Left" + node.Name)
 	meta := cluster.DecodeNodeMeta(node.Meta)
 	if meta.NodeType == cluster.Mgmt {
-
+		log.Println("NotifyLeave: cluster management")
 	}
 	if meta.NodeType == cluster.Music {
 		go m.service.HandleMusicNodeLeave(node)
@@ -112,7 +112,10 @@ func main() {
 		if err != nil {
 			log.Fatal("Could not update config")
 		}
-		os.WriteFile(*configPath, updated, 0644)
+		err = os.WriteFile(*configPath, updated, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	nodeName := config.Node.Name
@@ -125,6 +128,9 @@ func main() {
 	c.Delegate = cluster.Delegate{MetaData: metaData}
 
 	list, err := memberlist.Create(c)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	entry := cluster.SearchForCluster()
 
@@ -156,6 +162,8 @@ func main() {
 	case <-sig:
 		// Exit by user
 		log.Println("Ctrl-c detected, shutting down")
+	default:
+		log.Println("default")
 	}
 
 	log.Println("Goodbye.")

@@ -8,6 +8,7 @@ import (
 
 // Server represents the gRPC server
 type Server struct {
+	UnimplementedBobcaygeonManagementServer
 	service service.MgmtService
 }
 

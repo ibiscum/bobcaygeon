@@ -16,6 +16,7 @@ import (
 	"github.com/ibiscum/bobcaygeon/cmd/mgmt/service"
 	"github.com/ibiscum/bobcaygeon/rtsp"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 // DistributedMgmtService implements MgmtService with a distributed backing store
@@ -89,7 +90,7 @@ func (dms *DistributedMgmtService) SetDisplayName(ID string, displayName string,
 			return err
 		}
 		if resp.ReturnCode != 200 {
-			return fmt.Errorf("Error changing name of speaker")
+			return fmt.Errorf("error changing name of speaker: %v", resp.ReturnCode)
 		}
 	}
 
@@ -183,7 +184,10 @@ func (dms *DistributedMgmtService) CreateZone(displayName string, speakerIDs []s
 			return "", err
 		}
 	}
-	dms.store.SaveZoneConfig(zc)
+	err := dms.store.SaveZoneConfig(zc)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return id, nil
 }
 
@@ -257,7 +261,10 @@ func (dms *DistributedMgmtService) AddSpeakersToZone(zoneID string, speakerIDs [
 		return err
 	}
 	zone.Speakers = append(zone.Speakers, speakerIDs...)
-	dms.store.SaveZoneConfig(zone)
+	err = dms.store.SaveZoneConfig(zone)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -329,7 +336,11 @@ func (dms *DistributedMgmtService) RemoveSpeakersFromZone(zoneID string, speaker
 		}
 	}
 	zone.Speakers = newSpeakers
-	dms.store.SaveZoneConfig(zone)
+	err = dms.store.SaveZoneConfig(zone)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -400,7 +411,10 @@ func (dms *DistributedMgmtService) DeleteZone(zoneID string) error {
 			return err
 		}
 	}
-	dms.store.DeleteZoneConfig(zone.ID)
+	err := dms.store.DeleteZoneConfig(zone.ID)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -444,7 +458,11 @@ func (dms *DistributedMgmtService) ChangeZoneName(zoneID string, newName string)
 		return err
 	}
 	zone.DisplayName = newName
-	dms.store.SaveZoneConfig(zone)
+	err = dms.store.SaveZoneConfig(zone)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -479,7 +497,7 @@ func (dms *DistributedMgmtService) GetTrackForZone(zoneID string) (*service.Trac
 		}
 	}
 	if zone.ID == "" {
-		return nil, fmt.Errorf("Zone: %s not found", zoneID)
+		return nil, fmt.Errorf("zone: %s not found", zoneID)
 	}
 
 	client, err := dms.getSpeakerClient(zone.Leader)
@@ -557,10 +575,10 @@ func (dms *DistributedMgmtService) getLeaderClient(leader string) (api.Bobcaygeo
 	leaderAddr, _ := net.ResolveTCPAddr("tcp", leader)
 	apiAddress := dms.getLeaderAPIAddress(leaderAddr)
 	if apiAddress == "" {
-		return nil, fmt.Errorf("Could not resolve API address for: %s", leader)
+		return nil, fmt.Errorf("could not resolve API address for: %s", leader)
 	}
 	log.Printf("Forwarding request to leader: %s \n", apiAddress)
-	conn, err := grpc.Dial(apiAddress, grpc.WithInsecure())
+	conn, err := grpc.NewClient(apiAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Println("Could not open connection", err)
 		return nil, err
@@ -578,12 +596,12 @@ func (dms *DistributedMgmtService) getSpeakerClient(speakerID string) (*closable
 
 	speakers := cluster.FilterMembersByFn(filter, dms.nodes)
 	if len(speakers) != 1 {
-		return nil, fmt.Errorf("Could not find speaker with id: %s", speakerID)
+		return nil, fmt.Errorf("could not find speaker with id: %s", speakerID)
 	}
 	speaker := speakers[0]
 	meta := cluster.DecodeNodeMeta(speaker.Meta)
 	speakerAPIAddress := fmt.Sprintf("%s:%d", speaker.Addr.String(), meta.APIPort)
-	conn, err := grpc.Dial(speakerAPIAddress, grpc.WithInsecure())
+	conn, err := grpc.NewClient(speakerAPIAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Println("Could not open connection", err)
 		return nil, err
@@ -624,7 +642,10 @@ func (dms *DistributedMgmtService) HandleMusicNodeJoin(node *memberlist.Node) {
 	}
 
 	// for both cases, where this node is a member or a leader, we will remove it from the other speakers
-	dms.removeFromAllSpeakers([]string{node.Name})
+	err := dms.removeFromAllSpeakers([]string{node.Name})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if wasLeader {
 		client, err := dms.getSpeakerClient(node.Name)
@@ -759,7 +780,10 @@ func (dms *DistributedMgmtService) HandleMusicNodeLeave(node *memberlist.Node) {
 		return
 	}
 	updateZone.Leader = newLeader.Name
-	dms.store.SaveZoneConfig(updateZone)
+	err = dms.store.SaveZoneConfig(updateZone)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // SetMuteForSpeaker will mute or unmute the given speaker
@@ -801,7 +825,7 @@ func (dms *DistributedMgmtService) SetMuteForSpeaker(speakerID string, isMuted b
 	localAddress := client.LocalAddress()
 	req.RequestURI = fmt.Sprintf("rtsp://%s/%s", localAddress, sessionID)
 	req.Headers["Content-Type"] = "text/parameters"
-	var body = ""
+	var body string
 	if isMuted {
 		req.Headers["X-BCG-Muted"] = "muted"
 		//airplay servers understands mute as -144

@@ -98,9 +98,9 @@ func (lp *LocalPlayer) playStream(session *rtsp.Session) {
 	// }
 
 	for d := range session.DataChan {
-		lp.volLock.RLock()
-		// vol := lp.volume
-		lp.volLock.RUnlock()
+		//lp.volLock.RLock()
+		//vol := lp.volume
+		//lp.volLock.RUnlock()
 		decoded, err := decoder(d)
 		if err != nil {
 			log.Println("Problem decoding packet")
@@ -134,7 +134,10 @@ func AdjustAudio(raw []byte, vol float64) []byte {
 		val = int16(mod)
 		val = min(32767, val)
 		val = max(-32767, val)
-		binary.Write(adjusted, binary.LittleEndian, val)
+		err = binary.Write(adjusted, binary.LittleEndian, val)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 	}
 

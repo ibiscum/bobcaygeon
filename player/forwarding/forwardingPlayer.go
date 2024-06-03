@@ -168,7 +168,10 @@ func (p *Player) SetVolume(volume float64) {
 			req.Headers["Content-Type"] = "text/parameters"
 			body := fmt.Sprintf("volume: %f", prepareVolume(volume))
 			req.Body = []byte(body)
-			client.Send(req)
+			_, err = client.Send(req)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}()
 }
@@ -259,7 +262,10 @@ func (p *Player) SetTrack(album string, artist string, title string) {
 				continue
 			}
 			req.Body = body
-			client.Send(req)
+			_, err = client.Send(req)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}()
 }
@@ -285,7 +291,10 @@ func (p *Player) SetAlbumArt(artwork []byte) {
 			req.Headers["Content-Type"] = "image/jpeg"
 
 			req.Body = artwork
-			client.Send(req)
+			_, err = client.Send(req)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}()
 }
@@ -322,7 +331,10 @@ func (p *Player) initSession(nodeName string, ip net.IP, port int) {
 
 	log.Printf("Session established for %s (%s:%d).\n", nodeName, ip.String(), port)
 
-	session.StartSending()
+	err = session.StartSending()
+	if err != nil {
+		log.Fatal(err)
+	}
 	cSession := &clientSession{session, port}
 	p.sessions.addSession(nodeName, cSession)
 

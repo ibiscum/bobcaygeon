@@ -16,7 +16,7 @@ import (
 
 // this stuff is based on another go airtunes server: https://github.com/joelgibson/go-airplay/blob/master/airplay/auth.go
 
-//from Shairport: https://github.com/abrasive/shairport/
+// from Shairport: https://github.com/abrasive/shairport/
 const privateKey string = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpQIBAAKCAQEA59dE8qLieItsH1WgjrcFRKj6eUWqi+bGLOX1HL3U3GhC/j0Qg90u3sG/1CUt
 wC5vOYvfDmFI6oSFXi5ELabWJmT2dKHzBJKa3k9ok+8t9ucRqMd6DZHJ2YCCLlDRKSKv6kDqnw4U
@@ -77,8 +77,8 @@ func aeskeyFromRsa(rsaaeskey64 string) (key []byte, err error) {
 // 5. the payload is signed with the private key
 // 6. the signed data is base64 encoded
 func generateChallengeResponse(challenge string, macAddr net.HardwareAddr, ipAddr string) (string, error) {
-
-	log.Printf(fmt.Sprintf("building challenge for %s (ip: %s, mac: %s)", challenge, ipAddr, macAddr.String()))
+	tmp := fmt.Sprintf("building challenge for %s (ip: %s, mac: %s)", challenge, ipAddr, macAddr.String())
+	log.Print(tmp)
 
 	// the incoming challenge will be unpadded, need to pad to
 	a := base64pad(challenge)
