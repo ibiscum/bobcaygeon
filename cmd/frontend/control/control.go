@@ -6,13 +6,13 @@ import (
 	"net"
 	"time"
 
-	api "github.com/envoyproxy/go-control-plane/envoy/api/v2"
+	apiv2 "github.com/envoyproxy/go-control-plane/envoy/api/v2"
 	"github.com/envoyproxy/go-control-plane/envoy/api/v2/core"
 	"github.com/envoyproxy/go-control-plane/envoy/api/v2/endpoint"
 	"github.com/envoyproxy/go-control-plane/envoy/api/v2/listener"
 	"github.com/envoyproxy/go-control-plane/envoy/api/v2/route"
 	hcm "github.com/envoyproxy/go-control-plane/envoy/config/filter/network/http_connection_manager/v2"
-	discovery "github.com/envoyproxy/go-control-plane/envoy/service/discovery/v2"
+	discoveryv3 "github.com/envoyproxy/go-control-plane/envoy/service/discovery/v3"
 
 	"github.com/envoyproxy/go-control-plane/pkg/cache/v3"
 	xds "github.com/envoyproxy/go-control-plane/pkg/server/v3"
@@ -84,11 +84,11 @@ func (cp *ControlPlane) Start() {
 	grpcServer := grpc.NewServer()
 	lis, _ := net.Listen("tcp", fmt.Sprintf(":%d", cp.apiPort))
 
-	discovery.RegisterAggregatedDiscoveryServiceServer(grpcServer, server)
-	api.RegisterEndpointDiscoveryServiceServer(grpcServer, server)
-	api.RegisterClusterDiscoveryServiceServer(grpcServer, server)
-	api.RegisterRouteDiscoveryServiceServer(grpcServer, server)
-	api.RegisterListenerDiscoveryServiceServer(grpcServer, server)
+	discoveryv3.RegisterAggregatedDiscoveryServiceServer(grpcServer, server)
+	apiv2.RegisterEndpointDiscoveryServiceServer(grpcServer, server)
+	apiv2.RegisterClusterDiscoveryServiceServer(grpcServer, server)
+	apiv2.RegisterRouteDiscoveryServiceServer(grpcServer, server)
+	apiv2.RegisterListenerDiscoveryServiceServer(grpcServer, server)
 
 	grpcServer.Serve(lis)
 }
@@ -128,7 +128,9 @@ func (cp *ControlPlane) RemoveEndpoint(mgmtEndpoint MgmtEndpoint) {
 }
 
 func (cp *ControlPlane) newSnapshot() {
-	snapshot, err := cache.NewSnapshot(fmt.Sprint(cp.cacheVersion), []cache.Resource{cp.endpoints}, []cache.Resource{cp.cluster}, nil, []cache.Resource{cp.listener})
+	snapshot, err := cache.NewSnapshot(
+		fmt.Sprint(cp.cacheVersion), []cache.ResourceSnapshot{cp.endpoints},
+	[]cache.ResourceSnapshot{cp.cluster}, nil, []cache.Resource{cp.listener})
 	if err != nil {
 		log.Fatal(err)
 	}
