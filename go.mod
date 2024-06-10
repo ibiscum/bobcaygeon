@@ -9,7 +9,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/grandcat/zeroconf v1.0.0
 	github.com/hashicorp/memberlist v0.5.1
-	github.com/hashicorp/raft v1.6.1
+	github.com/hashicorp/raft v1.7.0
 	github.com/hashicorp/raft-boltdb v0.0.0-20231211162105-6c830fa4535e
 	github.com/maghul/alac v0.0.0-20161106215514-129591bceef4
 	github.com/pelletier/go-toml v1.9.5
@@ -56,5 +56,5 @@ require (
 	golang.org/x/text v0.15.0 // indirect
 	golang.org/x/tools v0.21.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240528184218-531527333157 // indirect
-	google.golang.org/protobuf v1.34.1
+	google.golang.org/protobuf v1.34.1 // indirect
 )
