@@ -11,7 +11,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/grandcat/zeroconf v1.0.0
 	github.com/hashicorp/memberlist v0.5.1
-	github.com/hashicorp/raft v1.6.1
+	github.com/hashicorp/raft v1.7.3
 	github.com/hashicorp/raft-boltdb v0.0.0-20231211162105-6c830fa4535e
 	github.com/maghul/alac v0.0.0-20161106215514-129591bceef4
 	github.com/pelletier/go-toml v1.9.5
@@ -27,6 +27,7 @@ require (
 	github.com/ebitengine/purego v0.7.1 // indirect
 	github.com/envoyproxy/go-control-plane/ratelimit v0.1.0 // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.1.0 // indirect
+	github.com/hashicorp/go-metrics v0.5.4 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	golang.org/x/sync v0.13.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20241202173237-19429a94021a // indirect
