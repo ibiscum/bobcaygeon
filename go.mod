@@ -1,6 +1,7 @@
 module github.com/ibiscum/bobcaygeon
 
-go 1.22.1
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
@@ -24,7 +25,7 @@ require (
 	cel.dev/expr v0.19.0 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/cncf/xds/go v0.0.0-20240905190251-b4127c9b8d78 // indirect
-	github.com/ebitengine/purego v0.7.1 // indirect
+	github.com/ebitengine/purego v0.8.0 // indirect
 	github.com/envoyproxy/go-control-plane/ratelimit v0.1.0 // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.1.0 // indirect
 	github.com/hashicorp/go-metrics v0.5.4 // indirect
