@@ -10,8 +10,8 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.5.4
 	github.com/grandcat/zeroconf v1.0.0
-	github.com/hashicorp/memberlist v0.5.3
-	github.com/hashicorp/raft v1.6.1
+	github.com/hashicorp/memberlist v0.5.1
+	github.com/hashicorp/raft v1.7.3
 	github.com/hashicorp/raft-boltdb v0.0.0-20231211162105-6c830fa4535e
 	github.com/maghul/alac v0.0.0-20161106215514-129591bceef4
 	github.com/pelletier/go-toml v1.9.5
@@ -37,7 +37,7 @@ require (
 	github.com/boltdb/bolt v1.3.1 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/ebitengine/oto/v3 v3.2.0
+	github.com/ebitengine/oto/v3 v3.3.3
 	github.com/fatih/color v1.17.0 // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
